@@ -1,25 +1,34 @@
 workflows:
   ios-release:
-    name: iOS Build Fix
+    name: Physical iPhone Build
     instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
       flutter: stable
       xcode: latest
     scripts:
-      - name: Flutter Build (No-Sign Method)
+      - name: Pre-build Setup
         script: | 
           flutter pub get
-          # We build for 'simulator' architecture to skip the Team ID check,
-          # but Sideloadly can still handle the resulting app.
-          flutter build ios --debug --no-codesign --simulator
+          # This forces Flutter to generate the necessary iOS files first
+          flutter build ios --config-only --no-codesign
+      - name: Force Skip Apple Team Requirement
+        script: | 
+          # This command removes the "Development Team" requirement from the project file
+          sed -i '' 's/DEVELOPMENT_TEAM = [A-Z0-9]\{10\};//g' ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGNING_REQUIRED = YES/CODE_SIGNING_REQUIRED = NO/g' ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGNING_ALLOWED = YES/CODE_SIGNING_ALLOWED = NO/g' ios/Runner.xcodeproj/project.pbxproj
+      - name: Flutter Build (Physical Device)
+        script: | 
+          # Note: We removed '--simulator' and are building for real hardware
+          flutter build ios --debug --no-codesign
       - name: Package for Sideloadly
         script: | 
-          # Navigate to the simulator build folder
-          cd build/ios/iphonesimulator
+          # We are now pulling from 'iphoneos' folder, not simulator
+          cd build/ios/iphoneos
           mkdir -p Payload
           cp -r Runner.app Payload/
           zip -r plan_it.ipa Payload
           cp plan_it.ipa $CM_EXPORT_DIR
     artifacts:
-      - build/ios/iphonesimulator/*.ipa
+      - build/ios/iphoneos/*.ipa
