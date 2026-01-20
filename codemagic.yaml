@@ -1,0 +1,26 @@
+workflows:
+  ios-release:
+    name: iOS Build Fix
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Force Skip Apple Team Requirement
+        script: | 
+          sed -i '' 's/DEVELOPMENT_TEAM = [A-Z0-9]\{10\};//g' ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGNING_REQUIRED = YES/CODE_SIGNING_REQUIRED = NO/g' ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGNING_ALLOWED = YES/CODE_SIGNING_ALLOWED = NO/g' ios/Runner.xcodeproj/project.pbxproj
+      - name: Flutter Build
+        script: | 
+          flutter build ios --release --no-codesign
+      - name: Package for Sideloadly
+        script: | 
+          cd build/ios/iphoneos
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -r plan_it.ipa Payload
+          cp plan_it.ipa $CM_EXPORT_DIR
+    artifacts:
+      - build/ios/iphoneos/*.ipa
