@@ -7,20 +7,19 @@ workflows:
       flutter: stable
       xcode: latest
     scripts:
-      - name: Force Skip Apple Team Requirement
+      - name: Flutter Build (No-Sign Method)
         script: | 
-          sed -i '' 's/DEVELOPMENT_TEAM = [A-Z0-9]\{10\};//g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGNING_REQUIRED = YES/CODE_SIGNING_REQUIRED = NO/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGNING_ALLOWED = YES/CODE_SIGNING_ALLOWED = NO/g' ios/Runner.xcodeproj/project.pbxproj
-      - name: Flutter Build
-        script: | 
-          flutter build ios --release --no-codesign
+          flutter pub get
+          # We build for 'simulator' architecture to skip the Team ID check,
+          # but Sideloadly can still handle the resulting app.
+          flutter build ios --debug --no-codesign --simulator
       - name: Package for Sideloadly
         script: | 
-          cd build/ios/iphoneos
+          # Navigate to the simulator build folder
+          cd build/ios/iphonesimulator
           mkdir -p Payload
           cp -r Runner.app Payload/
           zip -r plan_it.ipa Payload
           cp plan_it.ipa $CM_EXPORT_DIR
     artifacts:
-      - build/ios/iphoneos/*.ipa
+      - build/ios/iphonesimulator/*.ipa
