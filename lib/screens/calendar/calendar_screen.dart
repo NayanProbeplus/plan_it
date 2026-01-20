@@ -316,7 +316,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     decoration: BoxDecoration(
                       // use a subtle variant: surfaceVariant if you want more contrast,
                       // otherwise use surface with slight opacity
-                      color: cs.surfaceVariant ?? cs.surface.withOpacity(0.98),
+                      color: cs.surfaceContainerHighest ??
+                          cs.surface.withOpacity(0.98),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(

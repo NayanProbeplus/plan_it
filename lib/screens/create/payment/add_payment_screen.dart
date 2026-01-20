@@ -227,7 +227,7 @@ class AddPaymentScreenState extends State<AddPaymentScreen> {
         child: Theme(
           data: theme.copyWith(canvasColor: cs.surface), // ✅
           child: DropdownButtonFormField<String>(
-            value: _selectedPaymentType,
+            initialValue: _selectedPaymentType,
             dropdownColor: cs.surface, // ✅
             icon: Icon(Icons.keyboard_arrow_down_rounded,
                 color: cs.onSurface.withOpacity(0.6)),

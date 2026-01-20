@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
 import 'package:planit/models/payment_reminder.dart';
 import 'package:planit/providers/payment_reminders_provider.dart';
 import 'package:planit/theme/colors.dart';

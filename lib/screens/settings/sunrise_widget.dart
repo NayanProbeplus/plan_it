@@ -440,7 +440,6 @@ class _SunMoonWidget extends StatelessWidget {
   final double dayFactor;
 
   const _SunMoonWidget({
-    super.key,
     required this.size,
     required this.isMoon,
     required this.dayFactor,

@@ -254,7 +254,7 @@ class AppTheme {
           .apply(bodyColor: cs.onSurface, displayColor: cs.onSurface),
 
       // Cards / surfaces
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: cs.surface,
         elevation: 2,
         shape:
@@ -301,7 +301,7 @@ class AppTheme {
           .apply(bodyColor: cs.onSurface, displayColor: cs.onSurface),
 
       // Cards / surfaces
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: cs.surface,
         elevation: 2,
         shape:
@@ -309,7 +309,7 @@ class AppTheme {
       ),
 
       // small tweaks for consistent look
-      iconTheme: IconThemeData(color: cs.onBackground),
+      iconTheme: IconThemeData(color: cs.onSurface),
       dividerColor: cs.outline,
     );
   }

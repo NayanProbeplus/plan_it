@@ -220,7 +220,7 @@ class _RoundedDropdownContentState<T> extends State<RoundedDropdownContent<T>> {
           ],
           Expanded(
             child: DropdownButtonFormField<T>(
-              value: widget.value,
+              initialValue: widget.value,
               isExpanded: true,
               icon: const SizedBox.shrink(),
               dropdownColor: cs.surface,

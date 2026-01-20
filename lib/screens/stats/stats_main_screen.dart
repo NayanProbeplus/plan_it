@@ -6,11 +6,9 @@ import 'package:planit/core/router.dart';
 import 'package:planit/providers/payment_reminders_provider.dart';
 import 'package:planit/providers/stats_card_provider.dart';
 import 'package:planit/providers/task_provider.dart';
-import 'package:planit/theme/colors.dart';
 import 'package:planit/utils/utilities.dart';
 import 'package:planit/widgets/animated_grid_cards.dart';
 import 'package:planit/screens/stats/stats_card.dart';
-import 'package:planit/widgets/gradient_text.dart';
 
 class StatsCardsGrid extends ConsumerStatefulWidget {
   const StatsCardsGrid({super.key});

@@ -111,7 +111,7 @@ class _TodayItem {
 
 /// Summary row (chips-style) as a ConsumerWidget so only it rebuilds when needed.
 class _TodaySummaryRow extends ConsumerWidget {
-  const _TodaySummaryRow({super.key});
+  const _TodaySummaryRow();
 
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
@@ -227,7 +227,6 @@ class _TodayTiles extends ConsumerWidget {
     required this.topInitialDelay,
     required this.delayBetween,
     required this.fadeDuration,
-    super.key,
   });
 
   @override
@@ -496,7 +495,7 @@ class _SectionBlock extends StatelessWidget {
 
 // Shown if literally everything is empty
 class _EmptyTodayCard extends StatelessWidget {
-  const _EmptyTodayCard({super.key});
+  const _EmptyTodayCard();
 
   @override
   Widget build(BuildContext context) {
