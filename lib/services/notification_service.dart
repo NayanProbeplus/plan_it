@@ -1,4 +1,3 @@
-// lib/services/notification_service.dart
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
@@ -12,11 +11,10 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-    // timezone init
+    // Initialize timezone database
     tzdata.initializeTimeZones();
-    tz.setLocalLocation(tz.local);
 
-    // ONLY Android init
+    // Android initialization
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const initSettings = InitializationSettings(
@@ -32,7 +30,7 @@ class NotificationService {
       },
     );
 
-    // Create Android notification channel
+    // Android notification channel
     const androidChannel = AndroidNotificationChannel(
       'reminders_channel',
       'Payment reminders',
@@ -60,11 +58,13 @@ class NotificationService {
       priority: Priority.high,
     );
 
-    const platformDetails = NotificationDetails(
-      android: androidDetails,
+    await _plugin.show(
+      id,
+      title,
+      body,
+      const NotificationDetails(android: androidDetails),
+      payload: payload,
     );
-
-    await _plugin.show(id, title, body, platformDetails, payload: payload);
   }
 
   Future<void> scheduleNotification({
@@ -91,14 +91,16 @@ class NotificationService {
       body,
       tzDate,
       const NotificationDetails(android: androidDetails),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: payload,
     );
   }
 
-  Future<void> cancelNotification(int id) async => _plugin.cancel(id);
+  Future<void> cancelNotification(int id) async {
+    await _plugin.cancel(id);
+  }
 
-  Future<void> cancelAllNotifications() async => _plugin.cancelAll();
+  Future<void> cancelAllNotifications() async {
+    await _plugin.cancelAll();
+  }
 }

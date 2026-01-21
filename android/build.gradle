@@ -6,9 +6,26 @@ allprojects {
 }
 
 rootProject.buildDir = "../build"
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+    
+    // ✅ This block forces all plugins to use SDK 34 to fix the lStar error
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            project.android {
+                compileSdkVersion 36
+                buildToolsVersion "36.0.0"
+                
+                // ✅ This fixes the "Namespace not specified" error for Isar
+                if (project.name == "isar_flutter_libs") {
+                    namespace "dev.isar.isar_flutter_libs"
+                }
+            }
+        }
+    }
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
