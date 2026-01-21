@@ -1,6 +1,6 @@
 workflows:
   ios-release:
-    name: Physical iPhone Build
+    name: Physical iPhone Release Build
     instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
@@ -10,21 +10,22 @@ workflows:
       - name: Pre-build Setup
         script: | 
           flutter pub get
-          # This forces Flutter to generate the necessary iOS files first
+          # Generate configuration files
           flutter build ios --config-only --no-codesign
       - name: Force Skip Apple Team Requirement
         script: | 
-          # This command removes the "Development Team" requirement from the project file
+          # These commands strip the Apple ID requirements more aggressively
           sed -i '' 's/DEVELOPMENT_TEAM = [A-Z0-9]\{10\};//g' ios/Runner.xcodeproj/project.pbxproj
           sed -i '' 's/CODE_SIGNING_REQUIRED = YES/CODE_SIGNING_REQUIRED = NO/g' ios/Runner.xcodeproj/project.pbxproj
           sed -i '' 's/CODE_SIGNING_ALLOWED = YES/CODE_SIGNING_ALLOWED = NO/g' ios/Runner.xcodeproj/project.pbxproj
-      - name: Flutter Build (Physical Device)
+          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Developer"/CODE_SIGN_IDENTITY = ""/g' ios/Runner.xcodeproj/project.pbxproj
+          echo "Hardening: Stripped all signing requirements."
+      - name: Flutter Build (Physical Device Release)
         script: | 
-          # Note: We removed '--simulator' and are building for real hardware
-          flutter build ios --debug --no-codesign
+          # CRITICAL CHANGE: Changed --debug to --release
+          flutter build ios --release --no-codesign
       - name: Package for Sideloadly
         script: | 
-          # We are now pulling from 'iphoneos' folder, not simulator
           cd build/ios/iphoneos
           mkdir -p Payload
           cp -r Runner.app Payload/
